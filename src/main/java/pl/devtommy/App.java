@@ -1,5 +1,9 @@
 package pl.devtommy;
 
+import net.aksingh.owmjapis.api.APIException;
+import net.aksingh.owmjapis.core.OWM;
+import net.aksingh.owmjapis.model.CurrentWeather;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,11 +17,18 @@ public class App
 {
     private static String API_KEY;
 
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
+    public static void main( String[] args ) throws APIException {
+        System.out.println( "Weather App!" );
 
-        getApiKeyFromConfigFile("/config.properties");
+        getApiKeyFromConfigFile("config.properties");
+
+        OWM owm = new OWM(API_KEY);
+
+        CurrentWeather cwd = owm.currentWeatherByCityName("Poznan", OWM.Country.POLAND);
+
+        System.out.println("Miasto: " + cwd.getCityName());
+
+        System.out.println("Temp: " + Math.round(convertKelvinCelsius( cwd.getMainData().getTemp() )) + " \'C");
     }
 
     private static void getApiKeyFromConfigFile(String configFileName) {
@@ -34,5 +45,9 @@ public class App
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    private static double convertKelvinCelsius(double kelvin) {
+        return (kelvin - 273.15F);
     }
 }
