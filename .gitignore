@@ -1,2 +1,5 @@
 target
 .idea
+*.iml
+/src/test/
+/config.properties
